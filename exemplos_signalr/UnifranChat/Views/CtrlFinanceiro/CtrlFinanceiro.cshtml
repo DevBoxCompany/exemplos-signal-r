@@ -1,0 +1,83 @@
+﻿@model UnifranChat.Models.CtrlFinanceiro.ViewModelCadCredito
+
+@{
+    ViewBag.Title = "CtrlFinanceiro";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>CtrlFinanceiro</h2>
+
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <div class="form-horizontal">
+        <div class="pull-left">
+            <p class="muted">Default</p>
+            <div class="dropdown clearfix">
+                <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu">
+                    <li><a tabindex="-1" href="#">Action</a></li>
+                    <li><a tabindex="-1" href="#">Another action</a></li>
+                    <li><a tabindex="-1" href="#">Something else here</a></li>
+                    <li class="divider"></li>
+                    <li class="dropdown-submenu">
+                        <a tabindex="-1" href="#">More options</a>
+                        <ul class="dropdown-menu">
+                            <li><a tabindex="-1" href="#">Second level link</a></li>
+                            <li><a tabindex="-1" href="#">Second level link</a></li>
+                            <li><a tabindex="-1" href="#">Second level link</a></li>
+                            <li><a tabindex="-1" href="#">Second level link</a></li>
+                            <li><a tabindex="-1" href="#">Second level link</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <h4>ViewModelCadCredito</h4>
+        <hr />
+        @Html.ValidationSummary(true)
+        <div class="form-group">
+            @Html.LabelFor(model => model.ValorReceber, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.ValorReceber)
+                @Html.ValidationMessageFor(model => model.ValorReceber)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Parcelas, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Parcelas)
+                @Html.ValidationMessageFor(model => model.Parcelas)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.DataRecebimento, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.DataRecebimento)
+                @Html.ValidationMessageFor(model => model.DataRecebimento)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.NomeDevedor, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.NomeDevedor)
+                @Html.ValidationMessageFor(model => model.NomeDevedor)
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Create" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index", "Home")
+</div>

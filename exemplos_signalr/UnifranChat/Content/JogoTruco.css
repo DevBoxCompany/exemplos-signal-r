@@ -1,0 +1,185 @@
+﻿
+/*#region Jogo */
+
+body {
+    background-color: black;
+}
+
+div {
+    font-family: cursive;
+    font-size: 18px;
+    color: aliceblue;
+}
+
+#divListaJgs div {
+    text-align: center;
+    font-family: cursive;
+    font-size: 22px !important;
+    color: black;
+    cursor: pointer;
+    border-width: 1px;
+    border-style: solid;
+}
+
+    #divListaJgs div:hover {
+        background-color: royalblue;
+    }
+
+#divGeral {
+    width: 500px;
+    height: 900px;
+    float: left;
+}
+
+#divMenu {
+    width: 200px;
+    height: 900px;
+    float: left;
+    background-color: cornflowerblue;
+}
+
+.divPLacar {
+    margin-top: 100px;
+    width: 200px;
+    background-color: cornflowerblue;
+    display: none;
+}
+
+#divListaJgs {
+    margin-top: 100px;
+    width: 200px;
+    max-height: 300px;
+    background-color: dimgrey;
+    overflow-y: auto;
+}
+
+
+#divMesa {
+    width: 500px;
+    height: 300px;
+    background-color: darkgreen;
+    margin-top: -4px;
+}
+
+.divPlayer {
+    width: 500px;
+    height: 300px;
+    background-color: black;
+    display: inline-flex;
+}
+
+.divImg {
+    width: 60px;
+    height: 300px;
+    background-color: green;
+}
+
+.divCrt {
+    width: 440px;
+    height: 300px;
+    background-color: green;
+}
+
+    .divCrt div:first-child {
+        margin-left: 46px;
+    }
+
+.divCartas {
+    width: 115px;
+    height: 200px;
+    margin-left: 3px;
+    margin-Top: 49px;
+    float: left;
+    background-image: url('http://www.fundosanimais.com/Imagens/imagens-lobos.jpg');
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+}
+
+.divCrt1 div {
+    background-color: blue;
+}
+
+.divCrt2 div {
+    background-color: blue;
+}
+
+.divJogador {
+    width: 60px;
+    height: 60px;
+    background-color: yellow;
+    margin-top: 100px;
+}
+
+.divCrtMesa {
+    width: 149px;
+    height: 200px;
+    margin-left: 68px;
+    margin-Top: 49px;
+    float: left;
+    border: 2px;
+    background-color: green;
+    border-radius: 15px;
+}
+
+    .divCrtMesa img {
+        margin-left: 17px;
+    }
+
+.img {
+    width: 115px;
+    height: 200px;
+    background-color: antiquewhite;
+}
+
+    .img:hover {
+        background-color: red;
+    }
+
+
+
+
+
+
+/*#endregion */
+
+/*#region Chat */
+
+.divMenssagem {
+    width: 214px;
+    height: 200px;
+    background-color: white;
+    margin-left: 2px;
+    margin-top: 2px;
+    overflow-y: auto;
+}
+
+    .divMenssagem div {
+        font-size: 15px !important;
+        color: black !important;
+    }
+
+.divChat {
+    position: fixed;
+    top: inherit;
+    right: 0;
+    bottom: 0;
+    left: inherit;
+    z-index: 1040;
+    background-color: darkgrey;
+    width: 218px;
+    /*height: 264px;*/
+    /*display: none;*/
+}
+
+.divChatBtn {
+    width: 217px;
+    height: 26px;
+    background-color: silver;
+}
+.divChatBtn input{
+    width: 26px;
+    height: 25px;
+    background-color: silver;
+}
+
+/*#endregion */

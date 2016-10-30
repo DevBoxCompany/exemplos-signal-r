@@ -1,0 +1,14 @@
+﻿@model string[]
+
+@{
+    Layout = null;
+}
+@using (Html.BeginForm(Model[0], Model[1], FormMethod.Post))
+{
+    <div id="contModal" style="background-color: white">
+        <div style="font-size: 16px; color: blue; text-align: center;"><b>Jogar Truco</b></div>
+        <input type="text" id="txtName" name="txtName" placeholder="Insira nome Jogador" style="margin-left: 30px;margin-top: 20px" />
+        <input class="btn btn-default" type="submit" value="Iniciar" @*style="margin-top: 36px"*@>
+        <input class="btn btn-default" id="btnCancelarTrc" type="reset" value="Cancelar" @*style="margin-top: 36px"*@>
+    </div>
+}

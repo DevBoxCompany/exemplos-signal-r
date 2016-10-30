@@ -1,0 +1,77 @@
+﻿@model UnifranChat.Models.Truco.ViewModel.MesaViewModel
+@{
+    Layout = null;
+}
+
+<input type="hidden" name="idMesa" id="idMesa" value="" />
+<input type="hidden" name="idJog" id="idJog" value="" />
+<input type="hidden" name="idJogVez" id="idJogVez" value="0" />
+
+<div id="divPlayer1" class="divPlayer jogo">
+    <div id="divImg1" class="divImg">
+        <div id="divJogador1" class="divJogador jogo"></div>
+    </div>
+    <div class="divCrt divCrt1">
+        <div id="crt1" class="divCartas"></div>
+        <div id="crt2" class="divCartas"></div>
+        <div id="crt3" class="divCartas"></div>
+    </div>
+</div>
+
+<div id="divMesa" class="jogo">
+    <div id="divCrtMesa1" class="divCrtMesa"></div>
+    <div id="divCrtMesa2" class="divCrtMesa"></div>
+</div>
+
+<div id="divPlayer2" class="divPlayer jogo">
+    <div id="divImg2" class="divImg">
+        <div id="divJogador2" class="divJogador jogo"></div>
+    </div>
+    <div class="divCrt divCrt2">
+        <div id="crt4" class="divCartas"></div>
+        <div id="crt5" class="divCartas"></div>
+        <div id="crt6" class="divCartas"></div>
+    </div>
+</div>
+
+<script>
+
+    var idMs = '@Model.MesaId';
+    var idJg = '@Model.NumJogador';
+    var jgVez = '@Model.JogVez';
+
+    $('#idMesa').val(idMs);
+    $('#idJog').val(idJg);
+    $('#idJogVez').val(jgVez);
+
+    var classe = '.divCrt' + idJg;
+    var divCt = ".divCrt" + idJg;
+
+    var imagens =
+        '<img valor="' + '@(Model.Cartas[0].Valor)' + '" class="img" src="' + '@("/Content/ImgTruco/" + Model.Cartas[0].EnderecoImg +".png")' + '" />,' +
+        '<img valor="' + '@(Model.Cartas[1].Valor)' + '" class="img" src="' + '@("/Content/ImgTruco/" + Model.Cartas[1].EnderecoImg +".png")' + '" />,' +
+        '<img valor="' + '@(Model.Cartas[2].Valor)' + '" class="img" src="' + '@("/Content/ImgTruco/" + Model.Cartas[2].EnderecoImg +".png")' + '" />';
+
+    $(divCt + ' .divCartas').each(function (i) {
+        $(this).html(imagens.split(',')[i]);
+    });
+
+    $(classe + ' div').css('background-color', 'green');
+
+</script>
+
+<script>
+    $(divCt + " .divCartas").on("click", function () {
+        if ($('#idJogVez').val() == idJg) {
+            //Valor da carta
+            var vlCarta = $(this).children('img').attr('valor');
+
+            if (confirm('Jogar virada?')) {
+                vlCarta = 0;
+            }
+
+            //Imagem - IdMesa - IdJogador - idCarta - jgVez
+            JogarCarta(vlCarta > 0 ? $(this).html() : "<div><img class='img' src='http://www.fundosanimais.com/Imagens/imagens-lobos.jpg' /></div>", $('#idMesa').val(), idJg, $(this).attr('id'), $('#idJogVez').val(), vlCarta);
+        }
+    });
+</script>

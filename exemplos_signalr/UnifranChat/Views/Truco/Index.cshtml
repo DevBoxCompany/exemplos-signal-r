@@ -1,0 +1,284 @@
+﻿@{
+    Layout = null;
+}
+<link href="~/Content/JogoTruco.css" rel="stylesheet" />
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Ttruco</title>
+    <script>
+         var contChat = 0;
+    </script>
+</head>
+
+<body id="body" onresize="Ajusta();" onload="Ajusta();">
+
+    <div id="divMenu">
+
+        <div id="divPlc" class="divPLacar">
+            <div style="width: 200px; text-align: center;"> Placar Rodada </div>
+            <div id="pl1">
+                <div style="width: 100px; text-align: right; float: left">Jogador1 : </div>
+                <div style="width: 100px; float: left; text-align: center" id="divPnt1">0</div>
+            </div>
+            <div id="pl2">
+                <div style="width: 100px; text-align: right; float: left; margin-top: 20px">Jogador2 : </div>
+                <div style="width: 100px; float: left;  text-align: center; margin-top: 20px" id="divPnt2">0</div>
+            </div>
+        </div>
+        <div id="divPlacarTotal" class="divPLacar" style="margin-top: 193px">
+            <div style="width: 200px; text-align: center;"> Placar Jogo </div>
+            <div>
+                <div style="width: 100px; text-align: right; float: left">Total 1 : </div>
+                <div style="width: 100px; float: left; text-align: center" id="divPntTt1">0</div>
+            </div>
+            <div>
+                <div style="width: 100px; text-align: right; float: left; margin-top: 20px">Total 2 : </div>
+                <div style="width: 100px; float: left; text-align: center; margin-top: 20px" id="divPntTt2">0</div>
+            </div>
+        </div>
+
+        <div id="divListaJgs"></div>
+
+    </div>
+
+    <div id="divGeral">
+
+        <div id="divAguarde" style="margin-top: 254px; ">
+            <div style="width: 400px; text-align: center">
+                Aguardando Jogadores
+            </div>
+            <div style="width: 400px">
+                <img style="width: 100px;margin-left: 152px;" src="~/Content/Gifs/carregando3.gif" />
+            </div>
+        </div>
+
+    </div>
+
+    <div id="divsChats"></div>
+
+</body>
+
+</html>
+
+<style>
+
+</style>
+
+@Scripts.Render("~/bundles/jquery")
+@Scripts.Render("~/bundles/SignalR")
+<script src="~/signalr/hubs"></script>
+
+<script id="scrTruco">
+
+    var divAgd =
+        '<div id="divAguarde" style="margin-top: 254px;">' +
+            '<div style="width: 400px; text-align: center">' +
+            'Aguardando Jogadores' +
+            '</div>' +
+            '<div style="width: 400px">' +
+            '<img style="width: 100px;margin-left: 152px;" src="/Content/Gifs/carregando3.gif" />' +
+            '</div>' +
+            '</div>';
+
+    var jovoTruco = $.connection.jovoTruco; 
+
+    $.connection.hub.start();
+
+    jovoTruco.client.ativaMesa = function (mesa, jsCartas, jg, jgVez) {
+
+        $.get("../Truco/AtivaMesa", { mesa: mesa, cartas: jsCartas }).success(function (data) {
+            $('#divGeral').html(data);
+            $('#divPnt1').html("0");
+            $('#divPnt2').html("0");
+            $('.divPLacar').css('display', 'block');
+
+            $('#pl1').children('div').css('background-color', 'cornflowerblue');
+            $('#pl2').children('div').css('background-color', 'cornflowerblue');
+
+            var a = '#pl' + jg;
+            $(a).children('div').css('background-color', 'blue');
+
+            var idImg = "#divImg" + jgVez;
+            $(idImg).css('background-color', 'lightseagreen');
+
+        });
+    };
+
+    jovoTruco.client.listaJogadoresOn = function (lista) {
+        var list = lista.split(',');
+        $('#divListaJgs').html('');
+        $('#divListaJgs').append('<div style="color: white; background-color:black;">Lista Jogadores</div>');
+
+        for (var i = 0; i < list.length ; i++) {
+            $('#divListaJgs').append('<div class="divJogadoresChat" onclick="ConvidarConversa(this);" valor="' + list[i].split(';')[0] + '" >' + list[i].split(';')[1] + '</div>');
+        }
+    };
+
+    jovoTruco.client.cartaMesa = function (dados, idJog, idCarta, jgVez, pntJog1, pntJog2) {
+
+        var id = "#divCrtMesa" + idJog;
+        var idImg = "#divImg" + jgVez;
+        var idCrt = "#" + idCarta;
+
+        $('#divPnt1').html(pntJog1);
+        $('#divPnt2').html(pntJog2);
+
+        $('.divImg').css('background-color', 'green');
+        $(idImg).css('background-color', 'lightseagreen');
+
+        $(id).html(dados);
+        $('#idJogVez').val(jgVez);
+        $(idCrt).remove();
+    };
+
+    jovoTruco.client.limpaMesa = function () {
+        $('#divCrtMesa1').html('');
+        $('#divCrtMesa2').html('');
+    };
+
+    jovoTruco.client.fimJogo = function (message, t1, t2, mesaId, jgId) {
+        alert(message);
+        $('#divPntTt1').html(t1);
+        $('#divPntTt2').html(t2);
+        $('#divGeral').html('');
+        jovoTruco.server.novoJogo(mesaId, jgId);
+    };
+
+    jovoTruco.client.encerraJogo = function (message, tipo) {
+        alert(message);
+        if (tipo == "abandono") {
+            $('#divGeral').html(divAgd);
+            $('#divPntTt1').html("0");
+            $('#divPntTt2').html("0");
+            $('.divPLacar').css('display', 'none');
+        }
+    };
+
+</script>
+
+<script id="scrChat">
+
+    jovoTruco.client.permitirMensagem = function (nome, idRem) {
+        if (confirm("O jogador " + nome + " , esta te convidando para o chat \r Deseja aceitar?")) {
+            jovoTruco.server.confiraConvite(idRem, true);
+        } else {
+            jovoTruco.server.confiraConvite(idRem, false);
+        }
+    };
+
+    jovoTruco.client.aceitarConvite = function (conversaId, idConteudo, nomeConvidado) {
+
+        var divChat = "divC" + idConteudo;
+        var divChatBtn = "divCb" + idConteudo;
+        var divMsg = "divM" + idConteudo;
+        var chtMsg = "txtM" + idConteudo;
+
+        var a =
+            '<div id="' + divChat + '" class="divChat" valor="' + conversaId + '">' +
+                '<div id="' + divChatBtn + '" class="divChatBtn">' +
+                     '<b style="float:left;width: 164px;"> ' + nomeConvidado + '</b>' +
+                     '<input type="button" value="_" onclick="EsconderExibirChat(this);"/>' +
+                     '<input type="button" value="X" divchat="#' + divChat + '" converid="' + conversaId + '" onclick="FecharChat(this);" />' +
+                '</div>' +
+                '<div id="' + divMsg + '" class="divMenssagem"></div>' +
+                '<input evento="0" convid="' + conversaId + '" divconteudoid="' + divMsg + '" id="' + chtMsg + '" onkeydown="myFunction(this);" type="text" style="width: 214px; margin-left: 2px;margin-top: 2px;font-size: 22px;" />' +
+            '</div>';
+
+        $('#divsChats').append(a);
+
+        var dad1 = $('.divChat').length;
+        if (dad1 > 1) {
+
+            var f = "#" + divChat;
+            var idAntes = "#" + $(f).prev().attr('id');
+
+            var p = $(idAntes);
+            var offset = p.offset();
+            console.log(offset.left);
+            var totEsq = offset.left - 218;
+            console.log(totEsq);
+
+            $(f).css('left', totEsq);
+        }
+
+    };
+
+    jovoTruco.client.encrraConvChat = function (idChat) {
+        $(idChat).remove();
+    };
+
+    jovoTruco.client.recusarConvite = function (nome, tipo) {
+        if (tipo == "1")
+            alert(nome + ', recusou o convite para o chat.');
+        else
+            alert(nome);
+    };
+
+    jovoTruco.client.transmitirMensagem = function (msg, nomeRem, idConteudo) {
+        $(idConteudo).append('<div><b>' + nomeRem + ':</b> ' + msg + '</div>');
+        $(idConteudo).animate({ scrollTop: $(idConteudo)[0].scrollHeight }, 1000);
+    };
+
+    function myFunction(idChtMsg) {
+        if ($(idChtMsg).attr('evento') == "0") {
+            $(idChtMsg).on('keypress', function (e) {
+                if (e.which == 13) {
+                    var conversaId = $(idChtMsg).attr('convid');
+                    var conteudoId = '#' + $(idChtMsg).attr('divconteudoid');
+                    jovoTruco.server.enviarMensagem($(idChtMsg).val(), conversaId, conteudoId);
+                    $(idChtMsg).val("");
+                }
+            });
+            $(idChtMsg).attr('evento', '2');
+            $(idChtMsg).removeAttr('onkeydown');
+        }
+    }
+
+    function ConvidarConversa(div) {
+        var idConvidar = $(div).attr('valor');
+        jovoTruco.server.convidar(idConvidar);
+    }
+
+    function FecharChat(idBtn) {
+        var a = $(idBtn).attr('divchat');
+        var b = $(idBtn).attr('converid');
+        jovoTruco.server.encerraConversa(b, a);
+    }
+
+    function EsconderExibirChat(idBtn) {
+        var a = $(idBtn).val();
+        if (a == "_") {
+            $(idBtn).parent().next().css('display', 'none');
+            $(idBtn).parent().next().next().css('display', 'none');
+            $(idBtn).val('O');
+        } else {
+            $(idBtn).parent().next().css('display', 'block');
+            $(idBtn).parent().next().next().css('display', 'block');
+            $(idBtn).val('_');
+        }
+    }
+
+</script>
+
+<script id="scrFuncoes">
+
+    function Ajusta() {
+        var t = (window.innerWidth - 700) / 2;
+        $('#divGeral').css('margin-left', t + 'px');
+        //AjustaChat();
+    }
+    //function AjustaChat() {
+    //    var l = window.innerWidth - 220;
+    //    var t = window.innerHeight - 239;
+    //    $('#divChat').css('left', l);
+    //    $('#divChat').css('top', t);
+    //}
+
+    function JogarCarta(dados, mesaId, idJog, idCrt, jgVez, vlCarta) {
+        jovoTruco.server.cartaNaMesa(dados, mesaId, idJog, idCrt, jgVez, vlCarta);
+    }
+
+</script>

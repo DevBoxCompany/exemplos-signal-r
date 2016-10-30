@@ -1,0 +1,268 @@
+﻿@model UnifranChat.Models.NovoTruco.ViewModelMesa
+@{
+    Layout = null;
+}
+<div id="divModalTrucar" class="modalTruco" style="display: none;">
+    <div class="contModalTrucar">
+        <div>
+            <input class="btn btn-lg" type="button" id="btnTrcTitulo" value="Truco moço..." />
+        </div>
+        <div>
+            <input class="btn btn-toolbar" type="button" id="btnTrcTempo" value="00:00:00" tipo="truco" />
+        </div>
+        <div>
+            <input class="btn btn-success" type="button" id="btnTrcAceitar" value="Aceitar" valor="3" />
+            <input class="btn btn-danger" type="button" id="btnTrcCorrer" value="Correr" />
+        </div>
+        <div>
+            <input class="btn btn-success" type="button" id="btnTrcMaisTruco" value="Seis" valor="3" />
+        </div>
+        <div style="display: none;">
+            <input class="btn btn-success" type="button" id="btnTrcAceitarM11" value="Aceitar" />
+            <input class="btn btn-danger" type="button" id="btnTrcCorrerM11" value="Correr" />
+        </div>
+    </div>
+</div>
+<div id="divModalTrucado" class="modalTruco" style="display: none;">
+    <div class="contModalTrucado">
+        <div id="divAguarde">
+            <div style="width: 400px; text-align: center">
+                Aguardando Jogadores
+            </div>
+            <div style="width: 400px">
+                <img style="width: 100px;margin-left: 152px;" src="~/Content/Gifs/carregando3.gif" />
+            </div>
+        </div>
+    </div>
+</div>
+<div id="divModalResultTruco" class="modalTruco" style="display: none;">
+    <div class="contModalTrucado">
+        <div>
+            <div id="txtResult" class="txtTrucoResultOk">
+                Truco Aceito
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="divMenuMesa">
+    <div id="menuMesaBtns">
+        <input class="btn btn-group-xs" type="button" id="btnVoltar" value="Sair Da Mesa" />
+        <input class="btn btn-group-xs" type="button" id="btnVerMesas" value="Ver Mesas" />
+        <div>
+            <input class="btn btn-group-xs" type="button" id="btnTrucar" value="Trucar" valor="3" />
+        </div>
+    </div>
+    <div id="menuMesaChats">
+        <div>
+            <div>Chat Mesa</div>
+            <div id="txtChatMesaDialog"></div>
+            <input type="text" id="txtChatMesa" />
+        </div>
+    </div>
+    <div id="divPanelCtrl">
+        <label id="pnUltimoMao"></label>
+        <label id="pnJogadorVez"></label>
+        <label id="pnVenceRodada"></label>
+    </div>
+</div>
+
+<div id="divTelaCartas">
+    <div id="divJogVesImagem" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+    <input type="hidden" id="hdnIdMesa" />
+    <input type="hidden" id="hdnNumJogador" />
+    <input type="hidden" id="hdnJgVez" />
+    <input type="hidden" id="hdnUltIndex" value='1' />
+
+    <div id="divMesaJogo" class="mesaJogo">
+        <div class="parteCima">
+
+            <div id="divPontosAdver" class="divPontosAdver"></div>
+            <div id="divJogador3" class="divJogador3 dvJog" value="0"></div>
+
+        </div>
+
+        <div class="parteMeio">
+            <div id="divJogador2" class="divJogador2 dvJog" value="0"></div>
+
+            <div class="divCartasMs">
+                <div class="dvTentosMesa">
+                    @for (var i = 0; i < 28; i++)
+                    {
+                        if (i < 25)
+                        {
+                    <div id="tent@(i)" class="Tentos" draggable="true" ondragstart="drag(event)"></div>
+                        }
+                        else
+                        {
+                    <div id="tent@(i)" class="TentosRodada" draggable="true" ondragstart="drag(event)"></div>
+                        }
+                    }
+                </div>
+
+                <div id="dvCtMesa" class="dvCrtMesa"></div>
+            </div>
+
+            <div id="divJogador4" class="divJogador4 dvJog" value="0"></div>
+        </div>
+
+        <div class="parteBaixo">
+
+            <div id="divPontosPrin" class="divPontosPrin"></div>
+            <div id="divJogador1" class="divJogador1 dvJog" value="0"></div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+    function allowDrop(ev) {
+        ev.preventDefault();
+    }
+
+    function drag(ev) {
+        ev.dataTransfer.setData("class", ev.target.id);
+    }
+
+    function drop(ev) {
+        ev.preventDefault();
+        var data = ev.dataTransfer.getData("class");
+        ev.target.appendChild(document.getElementById(data));
+    }
+</script>
+
+<script>
+    $('#btnTrucar').click(function () {
+        PedirTruco($('#hdnIdMesa').val(), $('#hdnNumJogador').val(), $(this).attr('valor'));
+    });
+    $('#btnTrcMaisTruco').click(function () {
+        PedirTruco($('#hdnIdMesa').val(), $('#hdnNumJogador').val(), $(this).attr('valor'));
+    });
+    $('#btnTrcAceitar').click(function () {
+        AceitarTruco($('#hdnIdMesa').val(), $(this).attr('valor'));
+    });
+    $('#btnTrcCorrer').click(function () {
+        CorrerTruco($('#hdnIdMesa').val());
+    });
+
+    $('#txtChatMesa').keypress(function (e) {
+        if ($('#txtChatMesa').val().trim() != '') {
+            if (e.which == 13) {
+                $("#txtChatMesaDialog").append('<div><b>Teste:</b>' + $('#txtChatMesa').val() + '</div>');
+                $("#txtChatMesaDialog").animate({ scrollTop: $('#txtChatMesaDialog')[0].scrollHeight }, 500);
+                $('#txtChatMesa').val('');
+            }
+        }
+    });
+    
+    $('#btnTrcAceitarM11').click(function () {
+        AceiatrMaoDeOnze(idMesa);
+    });
+    $('#btnTrcCorrerM11').click(function () {
+        CorrerMaoDeOnze(idMesa);
+    });
+
+</script>
+
+<script>
+
+    var idMesa = '@(Model.Mesa.MesaId)';
+    var NumJogador = '@(Model.NumJogador)';
+    var jgVez = '@(Model.Mesa.JogadorVez)';
+
+    var idCartaMesa = "#CrtMesa" + NumJogador;
+    var listIdCarts = [
+        ["cartaJg1", "cartaJg2", "cartaJg3"],
+        ["cartaJg4", "cartaJg5", "cartaJg6"],
+        ["cartaJg7", "cartaJg8", "cartaJg9"],
+        ["cartaJg10", "cartaJg11", "cartaJg12"]
+    ];
+    $('#hdnIdMesa').val(idMesa);
+    $('#hdnNumJogador').val(NumJogador);
+    $('#hdnJgVez').val(jgVez);
+
+    $('#divJogador1').html(
+        '    <div class="divJog">' +
+            '  <div id="' + listIdCarts[NumJogador - 1][0] + '" idjog="' + NumJogador + '" valor="0" class="dvCartas" style="background: ' + '@("url('/Content/ImgTruco/Fundo Carta1.png')")' + '; background-size: 100% 100%"></div>' +
+            '  <div id="' + listIdCarts[NumJogador - 1][1] + '" idjog="' + NumJogador + '" valor="0" class="dvCartas" style="background: ' + '@("url('/Content/ImgTruco/Fundo Carta1.png')")' + '; background-size: 100% 100%"></div>' +
+            '  <div id="' + listIdCarts[NumJogador - 1][2] + '" idjog="' + NumJogador + '" valor="0" class="dvCartas" style="background: ' + '@("url('/Content/ImgTruco/Fundo Carta1.png')")' + '; background-size: 100% 100%"></div>' +
+            '</div>');
+    $('#divJogador1').attr('value', NumJogador);
+    $('#dvCtMesa').html('<div id="CrtMesa' + NumJogador + '" valor="0" idjog=""></div>');
+
+    var grdJg = NumJogador;
+    for (var i = 2 ; i <= 4 ; i++) {
+        var a = grdJg == 1 ? 2 : grdJg == 2 ? 3 : grdJg == 3 ? 4 : 1;
+        var idDiv = '#divJogador' + i;
+        var idCrtMs = 'CrtMesa' + a;
+        $(idDiv).html(
+            '    <div class="divJog">' +
+                '  <div id="' + listIdCarts[a - 1][0] + '" class="dvCartas"></div>' +
+                '  <div id="' + listIdCarts[a - 1][1] + '" class="dvCartas"></div>' +
+                '  <div id="' + listIdCarts[a - 1][2] + '" class="dvCartas"></div>' +
+                '</div>');
+        $(idDiv).attr('value', a);
+        $('#dvCtMesa').append('<div id="' + idCrtMs + '" valor="0" idjog=""></div>');
+        grdJg = a;
+    }
+
+</script>
+
+<script>
+    
+    $(function () {
+        $('.dvJog[value~="' + jgVez + '"]').css('background-color', 'rgba(1,1,1,0.4)');
+
+        $('.dvTentosMesa div').click(function () {
+            $(this).animate({
+                    opacity: 0.25,
+                    height: "toggle"
+                }, 5000, function () {
+                    // Animation complete.
+                });
+        });
+
+        $('.Tentos , .TentosRodada').each(function () {
+            var esq = Math.floor((Math.random() * 150) + 1);
+            var cima = Math.floor((Math.random() * 150) + 1);
+            var rot = Math.floor((Math.random() * 360) + 1);
+            $(this).css('margin-left', esq);
+            $(this).css('margin-top', cima);
+            $(this).css('-webkit-transform', 'rotate(' + rot + 'deg)');
+        });
+
+
+
+        $('#divJogador1 .dvCartas').on('mousedown', function (e) {
+            if ($(this).attr('valor') != "0") {
+                if (e.which == 1 || e.which == 2) {
+                    if ($('#hdnJgVez').val() == $('#hdnNumJogador').val()) {
+                        var back = $(this).css('background-image');
+                        var valor = $(this).attr('valor');
+                        var idJog = $(this).attr('idjog');
+                        var id = $(this).attr('id');
+
+                        jogarCartaMesa($('#hdnIdMesa').val(), id, back, valor, idJog, e.which, $('#hdnJgVez').val());
+                    }
+                }
+            }
+        });
+
+        $('.dvCrtMesa div').on('click', function () {
+            if ($(this).attr('valor') != "0") {
+                var zIndex = parseInt($('#hdnUltIndex').val()) + 1;
+                $(this).css('z-index', zIndex);
+                $('#hdnUltIndex').val(zIndex);
+            }
+        });
+
+        $('#btnVerMesas').click(function () {
+            $('#divPagJogo').hide();
+            $('#dicPagPrincipal').show();
+            $('#btnVoltarMesa').show();
+        });
+
+        MostraCarta(idMesa);
+    });
+
+</script>

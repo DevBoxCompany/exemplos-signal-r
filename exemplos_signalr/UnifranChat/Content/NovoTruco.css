@@ -1,0 +1,1106 @@
+﻿/*#region Modal */
+
+.contModalTruco {
+    background-color: white;
+    width: 458px;
+    height: 460px;
+    margin-left: 35%;
+    margin-top: 200px;
+}
+
+.contModalTrucado {
+    width: 458px;
+    height: 241px;
+    margin-left: 35%;
+    margin-top: 277px;
+    border: 1px solid;
+    border-radius: 20px;
+    box-shadow: -1px 4px 11px inset;
+    background-color: rgba(5,0,0,0.5);
+}
+
+    .contModalTrucado > div {
+        margin-top: 68px;
+        margin-left: 28px;
+    }
+
+    .contModalTrucado #divAguarde div {
+        font-size: 18px;
+        color: blue;
+    }
+
+.contModalTrucar {
+    width: 458px;
+    height: 241px;
+    margin-left: 35%;
+    margin-top: 277px;
+    border: 1px solid;
+    border-radius: 20px;
+    box-shadow: -1px 4px 11px inset;
+    background-color: rgba(5,0,0,0.5);
+}
+
+    .contModalTrucar div {
+        width: 458px;
+        height: 60px;
+        text-align: center;
+        font-size: 12px;
+    }
+
+        .contModalTrucar div input {
+            margin-top: 10px;
+        }
+
+.txtTrucoResultOk {
+    width: 400px;
+    text-align: center;
+    color: green;
+    font-weight: bold;
+    font-size: 47px;
+}
+
+.txtTrucoResultNo {
+    width: 400px;
+    text-align: center;
+    color: red;
+    font-weight: bold;
+    font-size: 47px;
+}
+
+.txtTrucoResultAban {
+    width: 400px;
+    text-align: center;
+    color: red;
+    font-weight: bold;
+    font-size: 34px;
+}
+
+.txtTrucoResultDuplaVenc {
+    width: 400px;
+    text-align: center;
+    color: green;
+    font-weight: bold;
+    font-size: 34px;
+}
+
+    .txtTrucoResultDuplaVenc div:nth-child(1) {
+        margin-top: -40px;
+        width: 400px;
+        height: 60px;
+    }
+
+    .txtTrucoResultDuplaVenc div:nth-child(2) {
+        width: 400px;
+        height: 60px;
+        font-size: 28px;
+        color: white;
+        margin-top: 12px;
+    }
+
+    .txtTrucoResultDuplaVenc div:nth-child(3) {
+        width: 400px;
+        height: 60px;
+    }
+
+
+.modalTruco {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1030;
+    background-color: black;
+    background-color: hsla(0, 0%, 0%, 0.8);
+    display: none;
+    filter: alpha(opacity=90);
+}
+
+    .modalTruco.fade {
+        opacity: 0;
+        filter: alpha(opacity=0);
+    }
+
+    .modalTruco.in {
+        opacity: 0.5;
+        filter: alpha(opacity=50);
+    }
+
+/*#endregion */
+
+/*#region Principal */
+
+#divGeral {
+    width: 1100px;
+    height: 800px;
+    background-color: black;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+body {
+    background-repeat: no-repeat;
+    background-image: linear-gradient(to top, rgb(0, 0, 0), rgb(0, 61, 0));
+    background-size: 100% 100%;
+}
+
+html {
+    background-color: black;
+}
+
+/*#endregion */
+
+/*#region Barra Rolagem */
+
+::-webkit-scrollbar {
+    width: 12px; /* for vertical scrollbars */
+    height: 12px; /* for horizontal scrollbars */
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.8);
+}
+
+::-webkit-scrollbar-thumb { /* Barra*/
+    background: rgba(228, 228, 228, 0.8);
+}
+
+/*#endregion */
+
+/*#region Containers SalaEspera */
+
+#divListaJogadores {
+    width: 200px;
+    height: 600px;
+    float: left;
+    background-image: url('http://www.tudodownloads.com.br/upload/imagens_upload/1(5).png');
+    background-repeat: no-repeat;
+    background-size: 50% 23%;
+    background-position-x: 42px;
+    background-position-y: 451px;
+}
+
+    #divListaJogadores ul {
+        height: 420px;
+        overflow-y: auto;
+        border-radius: 4px;
+        border: 1px solid #980021;
+        box-shadow: inset 0 2px 3px 0 rgba(255,255,255,.3), inset 0 -3px 6px 0 rgba(0,0,0,.2), 0 3px 2px 0 rgba(0,0,0,.2);
+        background-image: linear-gradient(to bottom, #cf2b4f, #980021 130%);
+    }
+
+        #divListaJogadores ul li {
+            padding-left: 14px;
+            list-style-type: none;
+            border-radius: 4px 4px 9px 0px;
+            border: 1px solid rgb(240, 102, 102);
+            box-shadow: inset 0 2px 3px 0 rgba(255,255,255,.3), inset 0 -3px 6px 0 rgba(0,0,0,.2), 0 3px 2px 0 rgba(0,0,0,.2);
+            margin-left: -41px;
+            width: 185px;
+            cursor: pointer;
+            font-family: monospace;
+            color: white;
+        }
+
+            #divListaJogadores ul li:hover {
+                color: silver;
+                background-image: linear-gradient(to bottom, gray, dimgray 130%);
+            }
+
+            #divListaJogadores ul li:active {
+                background-image: linear-gradient(to bottom, cornflowerblue, dimgray 130%);
+            }
+
+.divSala {
+    width: 898px;
+    height: 598px;
+    float: left;
+    border-radius: 4px;
+    border: 1px solid black;
+    box-shadow: inset 0 2px 3px 0 rgba(255,255,255,.3), inset 0 -3px 6px 0 rgba(0,0,0,.2), 0 3px 2px 0 rgba(0,0,0,.2);
+    background-color: #312d28;
+    background-image: linear-gradient(to right, darkgreen 1px, green 1px);
+    background-size: 5px 5px;
+}
+
+.salas {
+    width: 900px;
+    height: 570px;
+}
+
+.divPaginacao {
+    width: 900px;
+    height: 30px;
+    background-color: black;
+    padding-top: 5px;
+}
+
+    .divPaginacao > div {
+        width: 20px;
+        height: 20px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+        .divPaginacao > div div {
+            width: 20px;
+            height: 20px;
+            background-color: green;
+            text-align: center;
+            float: left;
+            cursor: pointer;
+            border-radius: 2px 8px 2px 6px;
+            border-left: 1px solid #E6E6E6;
+            border-right: 2px solid #E6E6E6;
+            border-bottom: 1px solid #E6E6E6;
+            border-top: 1px solid #E6E6E6;
+            box-shadow: -1px 4px 11px inset;
+        }
+
+#divMenu {
+    width: 1100px;
+    height: 200px;
+    float: left;
+    color: #fff;
+    text-align: center;
+    border-radius: 4px;
+    border: 1px solid #980021;
+    box-shadow: inset 0 2px 3px 0 rgba(255,255,255,.3), inset 0 -3px 6px 0 rgba(0,0,0,.2), 0 3px 2px 0 rgba(0,0,0,.2);
+    background-image: linear-gradient(to bottom, #cf2b4f, #980021 130%);
+}
+
+#divBtnsMenu {
+    width: 1098px;
+    height: 150px;
+    float: left;
+    margin-top: 25px;
+    color: #fff;
+    text-align: center;
+    border-radius: 4px;
+    border: 1px solid darkgrey;
+    box-shadow: inset 0 2px 3px 0 rgba(255,255,255,.3), inset 0 -3px 6px 0 rgba(0,0,0,.2), 0 3px 2px 0 rgba(0,0,0,.2);
+    background-image: linear-gradient(to bottom, white, darkgrey 130%);
+}
+
+    #divBtnsMenu > input {
+        float: left;
+        margin-left: 20px;
+        margin-top: 20px;
+    }
+
+#chatMenuEspera {
+    margin-top: 4px;
+    float: left;
+    width: 500px;
+    height: 140px;
+    border: 1px solid darkgrey;
+    box-shadow: inset 0 2px 3px 0 rgba(255,255,255,.3), inset 0 -3px 6px 0 rgba(0,0,0,.2), 0 3px 2px 0 rgba(0,0,0,.2);
+    background-image: linear-gradient(to bottom, white, darkgrey 130%);
+}
+
+#txtChatEsperaDialog {
+    margin-top: 3px;
+    margin-left: 5px;
+    width: 490px;
+    height: 110px;
+    border: 1px solid gray;
+    box-shadow: inset 0 2px 3px 0 rgba(255,255,255,.3), inset 0 -3px 6px 0 rgba(0,0,0,.2), 0 3px 2px 0 rgba(0,0,0,.2);
+    background-image: linear-gradient(to bottom, white, lightgrey 130%);
+    border-radius: 6px 6px 0px 0px;
+    overflow-y: auto;
+}
+
+    #txtChatEsperaDialog div {
+        color: black;
+        text-align: left;
+        padding-left: 5px;
+        box-shadow: inset 0 2px 3px 0 rgba(255,255,255,.3), inset 0 -3px 6px 0 rgba(0,0,0,.2), 0 3px 2px 0 rgba(0,0,0,.2);
+        border: 1px solid lightgray;
+        border-radius: 6px 6px 6px 6px;
+    }
+
+        #txtChatEsperaDialog div:nth-child(odd) {
+            background-color: rgb(176, 176, 176);
+        }
+
+        #txtChatEsperaDialog div:nth-child(even) {
+            background-color: lightgray;
+        }
+
+#chatMenuEspera > input {
+    margin-top: 0px;
+    margin-left: 2px;
+    width: 490px;
+    height: 25px;
+    border: 1px solid gray;
+    max-width: 500px;
+    box-shadow: inset 0 2px 3px 0 rgba(255,255,255,.3), inset 0 -3px 6px 0 rgba(0,0,0,.2), 0 3px 2px 0 rgba(0,0,0,.2);
+    border-radius: 0px 0px 6px 6px;
+}
+
+/*#endregion */
+
+/*#region Containers TelaJogo */
+
+#divTelaCartas {
+    width: 900px;
+    height: 800px;
+    float: left;
+    border-radius: 4px;
+    border: 1px solid darkgreen;
+    box-shadow: inset 0 2px 3px 0 rgba(255,255,255,.3), inset 0 -3px 6px 0 rgba(0,0,0,.2), 0 3px 2px 0 rgba(0,0,0,.2);
+    background-color: #312d28;
+    background-image: linear-gradient(to right, darkgreen 1px, green 1px);
+    background-size: 5px 5px;
+}
+
+#divJogVesImagem {
+    width: 200px;
+    height: 200px;
+    background-color: transparent;
+    position: fixed;
+    /*display: block !important;
+    margin-left: 19px;
+    margin-top: 126px;
+    border-radius: 27px 27px 102px 26px;
+    -webkit-transform: rotate(173deg);*/
+}
+
+#divMenuMesa {
+    width: 200px;
+    height: 800px;
+    float: left;
+    border-radius: 4px;
+    border: 1px solid #043703;
+    box-shadow: inset 0 2px 3px 0 rgba(255,255,255,.3), inset 0 -3px 6px 0 rgba(0,0,0,.2), 0 3px 2px 0 rgba(0,0,0,.2);
+    background-image: linear-gradient(to bottom, #120105, #020202 130%);
+}
+
+.mesaJogo {
+    margin-top: 55px;
+    margin-left: 10px;
+    width: 880px;
+    height: 690px;
+    border-radius: 227px;
+    background-color: green;
+    background-image: url('http://4.bp.blogspot.com/-G9cWL7EuYK4/T_2G9DAIaFI/AAAAAAAABJo/YdyuJcW2RZE/s1600/Truco.png');
+    background-repeat: no-repeat;
+    background-size: 60% 60%;
+    background-position-x: 181px;
+    background-position-y: 125px;
+    border: 8px solid;
+    box-shadow: -1px -3px 113px inset;
+}
+
+.parteCima {
+    margin-top: -2px;
+    width: 880px;
+    height: 200px;
+}
+
+.parteMeio {
+    width: 880px;
+    height: 250px;
+}
+
+.parteBaixo {
+    width: 880px;
+    height: 240px;
+}
+
+.dvJog {
+    /*background-color: rgba(1,1,1,0.4);*/
+    border-radius: 120px;
+}
+
+.divJogador1 {
+    width: 400px;
+    height: 240px;
+    float: right;
+}
+
+.divPontosPrin {
+    width: 250px;
+    height: 240px;
+    float: right;
+}
+
+.divJogador2 {
+    width: 220px;
+    height: 250px;
+    float: left;
+}
+
+.divCartasMs {
+    width: 440px;
+    height: 250px;
+    float: left;
+}
+
+.divJogador4 {
+    width: 220px;
+    height: 250px;
+    float: left;
+}
+
+.divJogador3 {
+    width: 400px;
+    height: 200px;
+    float: left;
+}
+
+.divJog {
+    display: none;
+}
+
+.divPontosAdver {
+    width: 250px;
+    height: 200px;
+    float: left;
+}
+
+/*#endregion */
+
+/*#region Cartas */
+
+/*#region CrtJg1 */
+
+.divJogador1 .dvCartas {
+    width: 118px;
+    height: 177px;
+    background-color: gray;
+    float: left;
+    border-style: solid;
+    position: absolute;
+}
+
+    .divJogador1 .dvCartas:nth-child(1) {
+        background-color: red;
+        margin-left: 100px;
+        margin-top: 29px;
+        -webkit-transform: rotate(-27deg);
+        z-index: 1;
+        background-size: 100% 100%;
+    }
+
+    .divJogador1 .dvCartas:nth-child(2) {
+        background-color: black;
+        margin-left: 142px;
+        margin-top: 17px;
+        z-index: 2;
+        background-size: 100% 100%;
+    }
+
+    .divJogador1 .dvCartas:nth-child(3) {
+        background-color: blue;
+        margin-left: 195px;
+        margin-top: 35px;
+        -webkit-transform: rotate(23deg);
+        z-index: 3;
+        background-size: 100% 100%;
+    }
+
+/*#endregion */
+
+/*#region CrtJg2 */
+
+.divJogador2 .dvCartas {
+    width: 177px;
+    height: 118px;
+    background-color: gray;
+    border-style: solid;
+    position: absolute;
+    background: url('/Content/ImgTruco/Fundo Carta2.png');
+    background-size: 100% 100%;
+}
+
+    .divJogador2 .dvCartas:nth-child(1) {
+        background-color: red;
+        margin-left: 20px;
+        margin-top: 48px;
+        -webkit-transform: rotate(-33deg);
+        z-index: 1;
+    }
+
+    .divJogador2 .dvCartas:nth-child(2) {
+        background-color: black;
+        margin-left: 22px;
+        margin-top: 71px;
+        -webkit-transform: rotate(-10deg);
+        z-index: 2;
+    }
+
+    .divJogador2 .dvCartas:nth-child(3) {
+        background-color: blue;
+        margin-left: 15px;
+        margin-top: 108px;
+        -webkit-transform: rotate(11deg);
+        z-index: 3;
+    }
+/*#endregion */
+
+/*#region CrtJg3 */
+
+.divJogador3 .dvCartas {
+    width: 118px;
+    height: 177px;
+    background-color: gray;
+    float: left;
+    border-style: solid;
+    position: absolute;
+    background: url('/Content/ImgTruco/Fundo Carta3.png');
+    background-size: 100% 100%;
+}
+
+    .divJogador3 .dvCartas:nth-child(1) {
+        background-color: red;
+        margin-left: 96px;
+        margin-top: 16px;
+        -webkit-transform: rotate(33deg);
+        z-index: 1;
+    }
+
+    .divJogador3 .dvCartas:nth-child(2) {
+        background-color: black;
+        margin-left: 142px;
+        margin-top: 32px;
+        z-index: 2;
+    }
+
+    .divJogador3 .dvCartas:nth-child(3) {
+        background-color: blue;
+        margin-left: 195px;
+        margin-top: 16px;
+        -webkit-transform: rotate(-26deg);
+        z-index: 3;
+    }
+/*#endregion */
+
+/*#region CrtJg4 */
+
+.divJogador4 .dvCartas {
+    width: 177px;
+    height: 118px;
+    background-color: gray;
+    border-style: solid;
+    position: absolute;
+    background: url('/Content/ImgTruco/Fundo Carta4.png');
+    background-size: 100% 100%;
+}
+
+    .divJogador4 .dvCartas:nth-child(1) {
+        background-color: red;
+        margin-left: 20px;
+        margin-top: 43px;
+        -webkit-transform: rotate(28deg);
+        z-index: 1;
+    }
+
+    .divJogador4 .dvCartas:nth-child(2) {
+        background-color: black;
+        margin-left: 16px;
+        margin-top: 71px;
+        -webkit-transform: rotate(0deg);
+        z-index: 2;
+    }
+
+    .divJogador4 .dvCartas:nth-child(3) {
+        background-color: blue;
+        margin-left: 23px;
+        margin-top: 98px;
+        -webkit-transform: rotate(-22deg);
+        z-index: 3;
+    }
+/*#endregion */
+
+/*#endregion */
+
+/*#region Mesa */
+
+.dvTentosMesa {
+    width: 150px;
+    height: 250px;
+    float: left;
+}
+
+.Tentos {
+    width: 25px;
+    height: 25px;
+    float: left;
+    background-color: red;
+    position: absolute;
+    border-radius: 7px 27px 0px 27px;
+    border: 1px solid;
+    box-shadow: -1px 4px 11px inset;
+}
+
+.TentosRodada {
+    width: 27px;
+    height: 27px;
+    float: left;
+    background-color: yellow;
+    border-radius: 7px 27px 0px 27px;
+    border: 1px solid;
+    box-shadow: -1px 4px 11px inset;
+    position: absolute;
+}
+
+.dvCrtMesa {
+    width: 290px;
+    height: 250px;
+    float: left;
+}
+
+    .dvCrtMesa div {
+        width: 118px;
+        height: 177px;
+        position: absolute;
+        background-size: 100% 100%;
+    }
+
+        .dvCrtMesa div:nth-child(1) {
+            -webkit-transform: rotate(24deg);
+            margin-left: 93px;
+            margin-top: 35px;
+        }
+
+        .dvCrtMesa div:nth-child(2) {
+            -webkit-transform: rotate(74deg);
+            margin-left: 72px;
+            margin-top: 19px;
+        }
+
+        .dvCrtMesa div:nth-child(3) {
+            -webkit-transform: rotate(149deg);
+            margin-left: 117px;
+            margin-top: 51px;
+        }
+
+        .dvCrtMesa div:nth-child(4) {
+            -webkit-transform: rotate(109deg);
+            margin-left: 94px;
+            margin-top: 16px;
+        }
+
+/*#endregion */
+
+/*#region Mesas Sala Espera */
+
+.imgMesa4Vazia {
+    width: 200px;
+    height: 200px;
+    float: left;
+    margin-left: 78px;
+    margin-top: 59px;
+    background-color: rgba(2, 3, 15, 0.5);
+    border-radius: 20px;
+}
+
+    .imgMesa4Vazia div {
+        position: absolute;
+    }
+
+        .imgMesa4Vazia div:nth-child(1) {
+            margin-left: 76px;
+            margin-top: 148px;
+        }
+
+        .imgMesa4Vazia div:nth-child(2) {
+            margin-left: 1px;
+            margin-top: 76px;
+        }
+
+        .imgMesa4Vazia div:nth-child(3) {
+            margin-left: 76px;
+            margin-top: 1px;
+        }
+
+        .imgMesa4Vazia div:nth-child(4) {
+            margin-left: 148px;
+            margin-top: 76px;
+        }
+
+        .imgMesa4Vazia div:nth-child(5) {
+            background-color: green;
+            width: 90px;
+            height: 94px;
+            border-radius: 45px;
+            margin-left: 55px;
+            margin-top: 53px;
+            background-image: url('http://4.bp.blogspot.com/-G9cWL7EuYK4/T_2G9DAIaFI/AAAAAAAABJo/YdyuJcW2RZE/s1600/Truco.png');
+            background-repeat: no-repeat;
+            background-size: 70% 70%;
+            background-position-x: 14px;
+            background-position-y: 14px;
+            border: 3px solid;
+            box-shadow: -1px 4px 11px inset;
+        }
+
+.cadeiraVazia {
+    width: 51px;
+    height: 51px;
+    background-color: black;
+    border: 3px solid;
+    box-shadow: -1px 4px 11px;
+    border-radius: 14px 14px 14px 14px;
+    cursor: pointer;
+}
+
+.cadeiraOcupada {
+    width: 51px;
+    height: 51px;
+    background-color: red;
+    border: 3px solid;
+    box-shadow: -1px 4px 11px;
+    border-radius: 14px 14px 14px 14px;
+    cursor: no-drop;
+}
+
+/*#endregion */
+
+/*#region Menu Mesa Jogador */
+
+#menuMesaBtns {
+    width: 200px;
+    height: 300px;
+}
+
+    #menuMesaBtns > input[type=button]:hover {
+        background-image: linear-gradient(to bottom, #980021, #980021 130%);
+    }
+
+    #menuMesaBtns > input {
+        width: 190px;
+        height: 50px;
+        margin-left: 5px;
+        margin-top: 2px;
+        color: whitesmoke;
+        border: 1px solid #980021;
+        box-shadow: inset 0 2px 3px 0 rgba(255,255,255,.3), inset 0 -3px 6px 0 rgba(0,0,0,.2), 0 3px 2px 0 rgba(0,0,0,.2);
+        background-image: linear-gradient(to bottom, #cf2b4f, #980021 130%);
+    }
+
+    #menuMesaBtns > div {
+        width: 190px;
+        height: 180px;
+        margin-left: 5px;
+        margin-top: 2px;
+    }
+
+        #menuMesaBtns > div > input {
+            width: 100px;
+            height: 100px;
+            margin-left: 45px;
+            margin-top: 40px;
+            background-image: url('http://www.sinecofi.com.br/site/images/stories/logo-truco-online.png');
+            background-size: 100% 100%;
+            color: transparent;
+            background-color: rgb(52, 49, 49) !important;
+            border-radius: 4px;
+            border: 1px solid white;
+            box-shadow: inset 0 2px 3px 0 rgba(255,255,255,.3), inset 0 -3px 6px 0 rgba(0,0,0,.2), 0 3px 2px 0 rgba(0,0,0,.2);
+        }
+
+            #menuMesaBtns > div > input:hover {
+                background-color: rgb(15, 56, 14);
+            }
+
+#menuMesaChats {
+    width: 200px;
+    height: 500px;
+}
+
+    #menuMesaChats > div {
+        width: 190px;
+        height: 400px;
+        margin-left: 5px;
+        margin-top: 50px;
+    }
+
+        #menuMesaChats > div > div:nth-child(1) {
+            width: 190px;
+            height: 34px;
+            padding-top: 3px;
+            font-size: 18px;
+            color: #fff;
+            text-align: center;
+            border-radius: 4px;
+            border: 1px solid #980021;
+            box-shadow: inset 0 2px 3px 0 rgba(255,255,255,.3), inset 0 -3px 6px 0 rgba(0,0,0,.2), 0 3px 2px 0 rgba(0,0,0,.2);
+            background-image: linear-gradient(to bottom, #cf2b4f, #980021 130%);
+        }
+
+#divPanelCtrl {
+    width: 200px;
+    height: 139px;
+    background-color: green;
+    margin-top: -193px;
+    overflow-y: auto;
+    overflow-x: auto;
+    display: none;
+}
+
+    #divPanelCtrl label {
+        width: 200px;
+    }
+
+#txtChatMesaDialog {
+    width: 190px;
+    height: 242px;
+    text-align: left;
+    padding-left: 5px;
+    border-radius: 4px;
+    border: 1px solid #000000;
+    box-shadow: inset 0 7px 3px 0px rgba(255,255,255,.3), inset 0 -3px 6px 0 rgba(0,0,0,.2), 0 3px 2px 0 rgba(0,0,0,.2);
+    background-image: linear-gradient(to bottom, rgb(221, 255, 224), rgb(232, 255, 228) 130%);
+    overflow-y: auto;
+}
+
+#txtChatMesa {
+    width: 190px;
+    height: 30px;
+    border-radius: 4px;
+    border: 1px solid #000000;
+    box-shadow: inset 0 7px 3px 0px rgba(255,255,255,.3), inset 0 -3px 6px 0 rgba(0,0,0,.2), 0 3px 2px 0 rgba(0,0,0,.2);
+}
+
+/*#endregion */
+
+/*#region Chat */
+
+.divMenssagem {
+    width: 214px;
+    height: 200px;
+    margin-left: 2px;
+    margin-top: 2px;
+    overflow-y: auto;
+    border-radius: 4px 4px 4px 4px;
+    border: 1px solid gray;
+    box-shadow: inset 0 2px 3px 0 rgba(255,255,255,.3), inset 0 -3px 6px 0 rgba(0,0,0,.2), 0 3px 2px 0 rgba(0,0,0,.2);
+    background-image: linear-gradient(to bottom, rgb(225, 225, 225), rgb(222, 222, 222) 130%);
+}
+
+    .divMenssagem div {
+        width: 190px;
+        font-size: 15px !important;
+        color: black !important;
+        margin-left: 4px;
+        margin-top: 2px;
+    }
+
+.divChat {
+    position: fixed;
+    top: inherit;
+    right: 0;
+    bottom: 0;
+    left: inherit;
+    z-index: 1040;
+    background-color: darkgrey;
+    width: 218px;
+    border-radius: 4px 4px 4px 4px;
+}
+
+    .divChat > input {
+        border-radius: 4px 4px 4px 4px;
+        border: 1px solid gray;
+        box-shadow: inset 0 2px 3px 0 rgba(255,255,255,.3), inset 0 -3px 6px 0 rgba(0,0,0,.2), 0 3px 2px 0 rgba(0,0,0,.2);
+        background-image: linear-gradient(to bottom, rgb(225, 225, 225), rgb(222, 222, 222) 130%);
+        height: 28px;
+    }
+
+.divChatBtn {
+    width: 217px;
+    height: 26px;
+    color: whitesmoke;
+    border-radius: 4px 4px 0px 0px;
+    border: 1px solid gray;
+    box-shadow: inset 0 2px 3px 0 rgba(255,255,255,.3), inset 0 -3px 6px 0 rgba(0,0,0,.2), 0 3px 2px 0 rgba(0,0,0,.2);
+    background-image: linear-gradient(to bottom, gray, lightgray 130%);
+}
+
+    .divChatBtn div {
+        margin-top: 3px;
+        margin-left: 3px;
+        width: 18px;
+        height: 17px;
+        float: left;
+        cursor: pointer;
+        border-radius: 20px;
+        border: 1px solid gray;
+        box-shadow: inset 0 2px 3px 0 rgba(255,255,255,.3), inset 0 -3px 6px 0 rgba(0,0,0,.2), 0 3px 2px 0 rgba(0,0,0,.2);
+    }
+
+        .divChatBtn div:nth-child(3) {
+            background-image: linear-gradient(to bottom, rgb(160, 0, 0), red 130%);
+        }
+
+        .divChatBtn div:nth-child(2) {
+            width: 17px;
+            height: 16px;
+            margin-left: 15px;
+            background-image: linear-gradient(to bottom, rgb(168, 168, 168), lightgray 130%);
+        }
+
+        .divChatBtn div:nth-child(3):hover {
+            background-image: linear-gradient(to bottom, rgb(255, 50, 70), rgb(255, 50, 30) 130%);
+        }
+
+        .divChatBtn div:nth-child(2):hover {
+            background-image: linear-gradient(to bottom, rgb(207, 207, 207), rgb(220, 220, 220) 130%);
+        }
+
+    .divChatBtn label {
+        padding-top: 2px;
+        padding-left: 10px;
+        width: 157px;
+        float: left;
+    }
+
+.divDigitando {
+    border: 0px solid gray;
+    box-shadow: inset 0 2px 3px 0 rgba(255,255,255,.3), inset 0 -3px 6px 0 rgba(0,0,0,.2), 0 3px 2px 0 rgba(0,0,0,.2);
+}
+
+/*#endregion */
+
+/*#region Panel Controle */
+
+#divPainelResultados {
+    width: 300px;
+    height: 250px;
+    background-color: black;
+    color: white;
+    border-radius: 20px 20px 0px 0px;
+}
+
+.tituloNvTruco {
+    height: 30px;
+    width: 300px;
+}
+
+.modalResult {
+    width: 300px;
+    height: 280px;
+    right: 0;
+    background-color: gray;
+    position: absolute;
+    display: none;
+    z-index: 10;
+    margin-top: -50px;
+    opacity: 0.7;
+    border-radius: 20px;
+}
+
+#divDupla1 {
+}
+
+#divDupla2 {
+}
+
+.pontosPn {
+    width: 20px;
+    height: 20px;
+    border-radius: 20px;
+    float: left;
+    margin-left: 14px;
+    margin-top: 9px;
+}
+
+.pontoPainelOn {
+    background-color: red;
+}
+
+.pontoPainelOff {
+    background-color: blue;
+}
+
+.clsPnResult {
+    width: 300px;
+    height: 100px;
+}
+
+    .clsPnResult > div {
+        float: left;
+        height: 100px;
+    }
+
+        .clsPnResult > div:nth-child(1) {
+            width: 100px;
+        }
+
+            .clsPnResult > div:nth-child(1) > div {
+                width: 100px;
+                height: 50px;
+                text-align: center;
+                font-weight: bold;
+            }
+
+        .clsPnResult > div:nth-child(2) {
+            width: 80px;
+        }
+
+            .clsPnResult > div:nth-child(2) > div {
+                width: 80px;
+                height: 40px;
+                background-color: black;
+                margin-top: 29px;
+            }
+
+        .clsPnResult > div:nth-child(3) {
+            width: 60px;
+        }
+
+            .clsPnResult > div:nth-child(3) > div:nth-child(1) {
+                width: 60px;
+                height: 48px;
+                text-align: center;
+            }
+
+            .clsPnResult > div:nth-child(3) > div:nth-child(2) {
+                width: 60px;
+                height: 30px;
+                text-align: center;
+            }
+
+        .clsPnResult > div:nth-child(4) {
+            width: 60px;
+        }
+
+            .clsPnResult > div:nth-child(4) > div:nth-child(1) {
+                width: 60px;
+                height: 48px;
+                text-align: center;
+            }
+
+            .clsPnResult > div:nth-child(4) > div:nth-child(2) {
+                width: 60px;
+                height: 30px;
+                text-align: center;
+            }
+
+#divPnRodada {
+    width: 300px;
+    height: 50px;
+    background-color: black;
+    border-radius: 1px 1px 20px 20px;
+}
+
+    #divPnRodada > div {
+        width: 150px;
+        height: 50px;
+        float: left;
+    }
+
+        #divPnRodada > div > div {
+            width: 150px;
+            height: 25px;
+            text-align: center;
+        }
+
+        #divPnRodada > div:nth-child(1) {
+        }
+
+        #divPnRodada > div:nth-child(2) {
+        }
+
+/*#endregion */

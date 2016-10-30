@@ -1,0 +1,97 @@
+﻿@model UnifranChat.Models.NovoTruco.ViewModelSalaEspera
+@{
+    Layout = null;
+}
+<div id="divListaJogadores">
+    <ul>
+        @foreach (var jog in Model.NovoTruco.ListUsuarios)
+        {
+            
+            <li ativo="false" valor="@(jog.ConnectionId)">@(jog.Nome)</li>
+        }
+    </ul>
+    <div id="tstttttt" style="width: 87px;height: 40px; background-color: black"></div>
+</div>
+
+<div class="divSala">
+    @foreach (var sala in Model.NovoTruco.ListSalas)
+    {
+        <div id="@("Sala" + sala.IdSala)" class="salas" style="display: none">
+            @foreach (var mesa in sala.ListaMesas)
+            {
+                <div class="imgMesa4Vazia" id="@(mesa.MesaId)">
+                    <div class="@(mesa.Jogadores[0] == null || mesa.Jogadores[0].NumJogador == 0 ? "cadeiraVazia" : "cadeiraOcupada")" valor="1"></div>
+                    <div class="@(mesa.Jogadores[1] == null || mesa.Jogadores[1].NumJogador == 0 ? "cadeiraVazia" : "cadeiraOcupada")" valor="2"></div>
+                    <div class="@(mesa.Jogadores[2] == null || mesa.Jogadores[2].NumJogador == 0 ? "cadeiraVazia" : "cadeiraOcupada")" valor="3"></div>
+                    <div class="@(mesa.Jogadores[3] == null || mesa.Jogadores[3].NumJogador == 0 ? "cadeiraVazia" : "cadeiraOcupada")" valor="4"></div>
+                    <div></div>
+                </div>
+            }
+        </div>
+    }
+    <div class="divPaginacao">
+        <div>
+            @foreach (var sala in Model.NovoTruco.ListSalas)
+            {
+                <div class="paginas" onclick="Paginacao('@("#Sala" + sala.IdSala)',this)">@(sala.IdSala)</div>
+            }
+        </div>
+    </div>
+</div>
+
+<script>
+
+    $(function () {
+        $('#divListaJogadores > ul li[valor~="' + $('#hdnGuadConnectId').val() + '"]').remove();
+
+        $('#divListaJogadores > ul li').click(function () {
+            if ($(this).attr('ativo') != "true") {
+                var nome = $(this).text();
+                var connect = $(this).attr('valor');
+                CriarChat(nome, connect , "");
+                $(this).attr('ativo', 'true');
+            }
+        });
+
+        $('#tstttttt').click(function () {
+            $('#divGeral').animate({
+                    opacity: 0.25,
+                    height: "toggle"
+                }, 3000, function () {
+                    // Animation complete.
+                    $('#divGeral').css('opacity', 1);
+                    $('#divGeral').css('display','block');
+                });
+            
+        });
+    });
+
+    $(function () {
+        var qntSala = '@(Model.NovoTruco.ListSalas.Count)';
+        var id = '#Sala' + '@(Model.PaginaSala)';
+        $(id).show();
+        $('#hdnPaginaSala').val('@(Model.PaginaSala)');
+        $('.divPaginacao > div div:nth-child(' + '@(Model.PaginaSala)' + ')')
+            .css('background-color', 'blue')
+            .css('color', 'whitesmoke');
+        $('.divPaginacao > div').css('width', (parseInt(qntSala) * 20));
+
+        $('.cadeiraVazia').on('click' , function () {
+            var mesaId = $(this).parent().attr('id');
+            var numJogador = $(this).attr('valor');
+            EntrarMesa(mesaId , numJogador);
+        });
+    });
+
+    function Paginacao(id, idThis) {
+        $('.salas').each(function () {
+            $(this).hide();
+        });
+        $('.paginas').each(function () {
+            $(this).css('background-color', 'green').css('color', 'black');
+        });
+        $(idThis).css('background-color', 'blue').css('color', 'whitesmoke');
+        $(id).show();
+    }
+
+</script>

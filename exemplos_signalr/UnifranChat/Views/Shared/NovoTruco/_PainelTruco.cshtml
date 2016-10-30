@@ -1,0 +1,63 @@
+﻿@model UnifranChat.Models.NovoTruco.PainelControle
+@{
+    Layout = null;
+}
+<link href="~/Content/NovoTruco.css" rel="stylesheet" />
+
+<div id="divPainelResultados" draggable="true" ondragstart="drag(event)">
+    <div class="tituloNvTruco" style="text-align: center; padding-top: 2px;"> Painel Controle </div>
+
+    <div id="divDupla1" class="clsPnResult">
+        <div>
+            <div style="padding-top: 16px;">@(Model.NomeJogador[0][0])</div>
+            <div>@(Model.NomeJogador[0][1])</div>
+        </div>
+        <div>
+            <div>
+                <div class="pontosPn @(Model.VitoriaRodada[0][0] == 0 ? "pontoPainelOn" : "pontoPainelOff")"></div>
+                <div class="pontosPn @(Model.VitoriaRodada[0][1] == 0 ? "pontoPainelOn" : "pontoPainelOff")"></div>
+            </div>
+        </div>
+        <div>
+            <div>Pontos Partida</div>
+            <div>@(Model.PontosDupla[0])</div>
+        </div>
+        <div>
+            <div>Total de Pontos</div>
+            <div>@(Model.TotalPontosDupla[0])</div>
+        </div>
+    </div>
+
+    <div id="divDupla2" class="clsPnResult">
+        <div>
+            <div style="padding-top: 16px;">@(Model.NomeJogador[1][0])</div>
+            <div>@(Model.NomeJogador[1][1])</div>
+        </div>
+        <div>
+            <div>
+                <div class="pontosPn @(Model.VitoriaRodada[1][0] == 0 ? "pontoPainelOn" : "pontoPainelOff")"></div>
+                <div class="pontosPn @(Model.VitoriaRodada[1][1] == 0 ? "pontoPainelOn" : "pontoPainelOff")"></div>
+            </div>
+        </div>
+        <div>
+            <div>Pontos Partida</div>
+            <div>@(Model.PontosDupla[1])</div>
+        </div>
+        <div>
+            <div>Total de Pontos</div>
+            <div>@(Model.TotalPontosDupla[1])</div>
+        </div>
+    </div>
+
+    <div id="divPnRodada">
+        <div>
+            <div>Jogador Da Vez</div>
+            <div>@(Model.JogadorVez)</div>
+        </div>
+        <div>
+            <div>Ultimo Vencedor</div>
+            <div>@(Model.UltimoVencedor)</div>
+        </div>
+    </div>
+
+</div>

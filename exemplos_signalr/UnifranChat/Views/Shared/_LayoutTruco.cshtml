@@ -1,0 +1,63 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Novo Truco</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    <link href="~/Content/NovoTruco.css" rel="stylesheet" />
+</head>
+<body ondrop="drop(event)" ondragover="allowDrop(event)">
+    <div id="divModal2" class="modal-backdrop" style="display: none;">
+
+        @using (Html.BeginForm("Index", "Truco", FormMethod.Post))
+        {
+            <div id="contModal" style="background-color: white">
+                <div style="font-size: 16px; color: blue; text-align: center;"><b>Jogar Truco</b></div>
+                <input type="text" id="txtName" name="txtName" placeholder="Insira nome Jogador" style="margin-left: 30px;margin-top: 20px" />
+                <input class="btn btn-default" type="submit" value="Iniciar" @*style="margin-top: 36px"*@>
+                <input class="btn btn-default" id="btnCancelarTrc" type="reset" value="Cancelar" @*style="margin-top: 36px"*@>
+            </div>
+        }
+
+    </div>
+
+    <div id="divBody">
+        <script src="~/Scripts/jquery-1.10.2.js"></script>
+
+        @RenderBody()
+    </div>
+    <div id="divsChats"></div>
+
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+
+    <script>
+
+        $('#btnCancelarTrc').click(function () {
+            $('#divModal2').hide();
+        });
+    </script>
+    <script>
+        function allowDrop(ev) {
+            ev.preventDefault();
+        }
+
+        function drag(ev) {
+            ev.dataTransfer.setData(this, ev.target.id);
+        }
+
+        function drop(ev) {
+            ev.preventDefault();
+            var data = ev.dataTransfer.getData(this);
+            var a = document.getElementById(data);
+            a.style.left = event.clientX + "px";
+            a.style.top = event.clientY + "px";
+            a.style.bottom = "auto";
+        }
+    </script>
+</body>
+
+</html>

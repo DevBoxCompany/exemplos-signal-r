@@ -1,0 +1,622 @@
+﻿@{
+    Layout = "../Shared/_LayoutTruco.cshtml";
+}
+
+@Scripts.Render("~/bundles/jquery")
+@Scripts.Render("~/bundles/SignalR")
+<script src="~/signalr/hubs"></script>
+<script src="~/Scripts/jquery-ui.js"></script>
+
+<script id="scrVariaveis">
+    var tempo = new Number();
+    tempo = 30;
+</script>
+
+<div id="divGeral">
+
+    <input type="hidden" id="hdnGuadConnectId" value="" />
+    <input type="hidden" id="hdnGuadNome" value="" />
+
+    <div id="divModalNovaMesa" class="modalTruco">
+        <div class="contModalTruco">
+            <div style="font-size: 16px; color: blue; text-align: center;"><b>Jogar Truco</b></div>
+            <input type="text" id="txtName" name="txtName" placeholder="Insira nome Jogador" style="margin-left: 30px;margin-top: 20px" />
+            <input class="btn btn-default" type="submit" value="Iniciar" @*style="margin-top: 36px"*@>
+            <input class="btn btn-default" id="btnCancelarTrc" type="reset" value="Cancelar" @*style="margin-top: 36px"*@>
+        </div>
+    </div>
+
+    <div id="modalPnResult" class="modalResult"></div>
+
+    <div id="dicPagPrincipal">
+        <input type="hidden" id="hdnPaginaSala" value="1" />
+        <div id="divJogo"></div>
+        <div id="divMenu">
+            <div id="divBtnsMenu">
+                <div id="chatMenuEspera">
+                    <div id="txtChatEsperaDialog"></div>
+                    <input type="text" id="txtChatEspera" />
+                </div>
+                <input class="btn btn-default" type="button" id="btnNvMesa" value="Nova Mesa" />
+                <input class="btn btn-danger" type="button" id="btnSair" value="Sair" />
+                <input class="btn btn-danger" type="button" id="btnVoltarMesa" value="Voltar Mesa" style="display: none;" />
+                <input class="btn btn-success" type="button" id="btnMdlPanel" value="Painel Resultados" />
+                ()
+            </div>
+        </div>
+    </div>
+
+    <div id="divPagJogo" style="display: none"></div>
+</div>
+
+<script id="scrBtnsMesaEspera">
+
+    $('#btnSair').click(function () {
+        $('#divPagJogo').show();
+        $('#dicPagPrincipal').hide();
+    });
+    $('#btnVoltar').click(function () {
+        $('#dicPagPrincipal').show();
+        $('#divPagJogo').hide();
+    });
+    $('#btnNvMesa').click(function () {
+        $('#divModalNovaMesa').show();
+    });
+    $('#btnVoltarMesa').click(function () {
+        $('#dicPagPrincipal').hide();
+        $('#btnVoltarMesa').hide();
+        $('#divPagJogo').show();
+    });
+    $('#btnMdlPanel').click(function () {
+        $.get("../NovoTruco/ModalPanelControle").success(function (data) {
+            $('#modalPnResult').html(data);
+            $('#modalPnResult').show();
+        });
+    });
+
+</script>
+
+<script id="scrHubTruco">
+
+    var jovoTruco = $.connection.hubNovoTruco;
+    $.connection.hub.start();
+
+    jovoTruco.client.marcaUsuario = function (connectId, nome) {
+        $('#hdnGuadConnectId').val(connectId);
+        $('#hdnGuadNome').val(nome);
+    };
+    jovoTruco.client.carregaJogo = function () {
+        $.get("../NovoTruco/CarregaJogo", { pagina: $('#hdnPaginaSala').val() }).success(function (data) {
+            $('#divJogo').html(data);
+        });
+    };
+    jovoTruco.client.carregaJogoMesa = function () {
+        $('#divModalTrucado').hide();
+        $('#divModalTrucar').hide();
+        $('#txtResult').html('Um jogador desistiu. Mesa encerrada.');
+        $('#txtResult').removeClass();
+        $('#txtResult').addClass('txtTrucoResultAban');
+        $('#divModalResultTruco').show();
+        setTimeout('abandoJogoAdversarios()', 3000);
+    };
+
+    jovoTruco.client.sentaMesa = function (mesaId, numJogador) {
+        $(mesaId + ' div:nth-child(' + numJogador + ')').removeClass('cadeiraVazia').addClass('cadeiraOcupada');
+    };
+    jovoTruco.client.abreMesa = function (idMs, nmJg) {
+        $.get("../NovoTruco/CarregaMesa", { idMesa: idMs, numJogador: nmJg }).success(function (data) {
+            $('#divPagJogo').html(data);
+            $('#dicPagPrincipal').hide();
+            $('#divPagJogo').show();
+        });
+    };
+    jovoTruco.client.mostraCartas = function (jogadores) {
+        var listJog = jogadores.split(',');
+        for (var i = 0; i < listJog.length; i++) {
+            $('div[value~="' + listJog[i] + '"] > div').css('display', 'block');
+        }
+    };
+    jovoTruco.client.distribuiCartas = function (idCartaMs, nomeCarta, valor) {
+        $('.dvCartas').each(function () {
+            $(this).css('display', 'block');
+        });
+        $(idCartaMs).attr('valor', valor);
+        $(idCartaMs).css('background-image', 'url("/Content/ImgTruco/' + nomeCarta + '.png")');
+        $(idCartaMs).css('display', 'block');
+        $.get("../NovoTruco/ModalPanelControle",{ idMesa : $('#hdnIdMesa').val() , zeraRodada : true }).success(function (data) {
+            $('#modalPnResult').html(data);
+            $('#modalPnResult').show();
+        });
+    };
+    jovoTruco.client.atualizaPainelModal = function () {
+        $.get("../NovoTruco/ModalPanelControle", { idMesa: $('#hdnIdMesa').val() , zeraRodada: false }).success(function (data) {
+            $('#modalPnResult').html(data);
+            $('#modalPnResult').show();
+        });
+    };
+
+    jovoTruco.client.esconderMesa = function (jgVez) {
+        $('#hdnJgVez').val(jgVez);
+        $('.dvCrtMesa div').each(function () {
+            $(this).animate({
+                    opacity: 0.25,
+                    //height: "toggle"
+                    Left: "0px",
+                    Top: "0px"
+                }, 1000, function () {
+                    $(this).css('background-image', '');
+                    $(this).css('opacity', 1);
+                });
+        });
+        $('.dvJog').css('background-color', 'transparent');
+        $('.dvJog[value~="' + jgVez + '"]').css('background-color', 'rgba(1,1,1,0.4)');
+    };
+    jovoTruco.client.colocaCartaMesa = function (idCarta, backImage, valor, idJg, eWhich, jgVez) {
+        var idCrtMs = '#CrtMesa' + idJg;
+        var zInx = parseInt($('#hdnUltIndex').val()) + 1;
+        $(idCrtMs)
+            .attr('valor', eWhich == 1 ? valor : 0)
+            .attr('idjog', idJg)
+            .css('background-image', eWhich == 1 ? backImage : "url('/Content/ImgTruco/Fundo Carta1.png')")
+            .css('display', 'block')
+            .css('z-index', zInx);
+        $('#hdnUltIndex').val(zInx);
+        $('#hdnJgVez').val(jgVez);
+        $('.dvJog').css('background-color', 'transparent');
+        $('.dvJog[value~="' + jgVez + '"]').css('background-color', 'rgba(1,1,1,0.4)');
+        $(idCarta).css('display', 'none');
+    };
+
+    jovoTruco.client.pedirTrucoResult = function (idModal, valorAtual, valorProx, valorTxtProx, texto) {
+        tempo = 30;
+        $('#divModalTrucado').hide();
+        $('#divModalTrucar').hide();
+
+        $('#btnTrcAceitar').attr('valor', valorAtual);
+        $('#btnTrcMaisTruco').attr('valor', valorProx);
+        $('#btnTrcMaisTruco').val(valorTxtProx);
+        if (parseInt(valorProx) > 12)
+            $('#btnTrcMaisTruco').hide();
+
+        $('#btnTrcTitulo').val(texto);
+        $(idModal).show();
+        startCountdown();
+    };
+
+    jovoTruco.client.finalizaRodada = function (pntsDupla1, pntsDupla2, vitoriasRodada1, vitoriasRodada2, jgVez) {
+        $('#hdnJgVez').val("0");
+        setTimeout('FinalRodada(' + pntsDupla1 + ',' + pntsDupla2 + ',' + vitoriasRodada1 + ',' + vitoriasRodada2 + ',' + jgVez + ')', 2000);
+    };
+    jovoTruco.client.finalizaRodadaGeral = function (pntsDupla1, pntsDupla2, vitoriasRodada1, vitoriasRodada2, jgVez, jogadoresVenc) {
+        $('#hdnJgVez').val("0");
+        setTimeout('FinalRodada(' + pntsDupla1 + ',' + pntsDupla2 + ',' + vitoriasRodada1 + ',' + vitoriasRodada2 + ',' + jgVez + ')', 500);
+        setTimeout('ModalDuplaVencedora("' + jogadoresVenc + '")', 2000);
+        setTimeout('NovoJogoTruco("' + $('#hdnIdMesa').val() + '")', 6000);
+    };
+    jovoTruco.client.aceitarTrucoResult = function (proxValor, proxValorTxt) {
+        tempo = -1;
+        $('#divModalTrucado').hide();
+        $('#divModalTrucar').hide();
+        $('#txtResult').html('Truco Aceito...');
+        $('#txtResult').removeClass();
+        $('#txtResult').addClass('txtTrucoResultOk');
+        $('#divModalResultTruco').show();
+        setTimeout('TimeAceitaTruco()', 2000);
+
+        $('#btnTrucar').attr('valor', proxValor);
+        $('#btnTrucar').val(proxValorTxt);
+    };
+    jovoTruco.client.correrTrucoResult = function () {
+        tempo = -1;
+        $('#divModalTrucado').hide();
+        $('#divModalTrucar').hide();
+        $('#txtResult').html('Dupla Correu...');
+        $('#txtResult').removeClass();
+        $('#txtResult').addClass('txtTrucoResultNo');
+        $('#divModalResultTruco').show();
+        setTimeout('TimeCorreTruco()', 2000);
+    };
+
+    jovoTruco.client.abandonarJogoGeral = function (idMesa, idUsuario) {
+        if (idMesa != '') {
+            $(idMesa + ' div').removeClass('cadeiraOcupada');
+            $(idMesa + ' div').addClass('cadeiraVazia');
+        }
+        $('#divListaJogadores ul li[valor~="' + idUsuario + '"]').remove();
+    };
+    jovoTruco.client.abandonarJogoMesaJgs = function (idMesa, idUsuario, numJogador) {
+        $(idMesa + ' div[valor~="' + numJogador + '"]').removeClass('cadeiraOcupada');
+        $(idMesa + ' div[valor~="' + numJogador + '"]').addClass('cadeiraVazia');
+        $('#divListaJogadores ul li[valor~="' + idUsuario + '"]').remove();
+        $('.dvJog[value~="' + numJogador + '"] .divJog').hide();
+    };
+
+    jovoTruco.client.maoDeOnzeEspera = function () {
+        $('#divModalTrucado').hide();
+        $('#divModalTrucar').hide();
+        $('#divModalTrucado').show();
+    };
+    jovoTruco.client.maoDeOnzeEscolhe = function () {
+        tempo = 20;
+        $('#divModalTrucado').hide();
+        $('#divModalTrucar').hide();
+        $('.contModalTrucar div:nth-child(3)').css('display', 'none');
+        $('.contModalTrucar div:nth-child(4)').css('display', 'none');
+        $('.contModalTrucar div:nth-child(5)').css('display', 'block');
+        $('#btnTrcTempo').attr('tipo', 'm11');
+        $('#btnTrcTitulo').val("Jogar Mão de 11 ?");
+        $('#divModalTrucar').show();
+        startCountdown();
+    };
+    jovoTruco.client.maoDeOnzeResult = function (classResult, message, result) {
+        $('#divModalTrucado').hide();
+        $('#divModalTrucar').hide();
+        $('#txtResult').html(message);
+        $('#txtResult').removeClass();
+        $('#txtResult').addClass(classResult);
+        $('#divModalResultTruco').show();
+        setTimeout('MaoDeOnzeResult("' + result + '")', 2000);
+        if (result == "false")
+            setTimeout('NovoJogoTruco("' + $('#hdnIdMesa').val() + '")', 4000);
+    };
+
+</script>
+
+<script id="scrFuncoesJogo">
+    
+    function ModalDuplaVencedora(jogadoresVenc) {
+        var nomes = jogadoresVenc.split(',');
+        $('#divModalTrucado').hide();
+        $('#divModalTrucar').hide();
+        $('#txtResult').html(
+            '<div>Jogadores</div>' +
+                '<div>' + nomes[0] + ' e ' + nomes[1] + '</div>' +
+                '<div>Venceram</div>'
+        );
+        $('#txtResult').removeClass();
+        $('#txtResult').addClass('txtTrucoResultDuplaVenc');
+        $('#divModalResultTruco').show();
+    }
+    function NovoJogoTruco(mesaId) {
+        console.log('aqui');
+        console.log(mesaId);
+        jovoTruco.server.exibeCartasViradas(mesaId);
+        $('#divModalResultTruco').hide();
+        $('#txtResult').html('');
+    }
+
+    function EntrarMesa(mesaId, numJogador) {
+        jovoTruco.server.sentarMesa(mesaId, numJogador);
+    }
+    function MostraCarta(mesaId) {
+        jovoTruco.server.exibeCartasViradas(mesaId);
+    }
+    function jogarCartaMesa(idMesa, idCarta, backImage, valor, idJg, eWhich, jgVez) {
+        jovoTruco.server.jogarCartaMesas(idMesa, idCarta, backImage, valor, idJg, eWhich, jgVez);
+    }
+    function FinalRodada(pntsDupla1, pntsDupla2, vitoriasRodada1, vitoriasRodada2, jgVez) {
+        $('#hdnUltIndex').val("1");
+        inserirTentos(pntsDupla1, pntsDupla2, vitoriasRodada1, vitoriasRodada2);
+        $('#hdnJgVez').val(jgVez);
+        $('#btnTrucar').attr('valor', 3);
+        $('#btnTrucar').val("Truco");
+        $('.dvJog').css('background-color', 'transparent');
+        $('.dvJog[value~="' + jgVez + '"]').css('background-color', 'rgba(1,1,1,0.4)');
+    }
+
+    function PedirTruco(idMesa, numJogador, valorTruco) {
+        jovoTruco.server.pedirTruco(idMesa, numJogador, valorTruco);
+    }
+    function AceitarTruco(idMesa, valorTruco) {
+        jovoTruco.server.aceitarTruco(idMesa, valorTruco);
+    }
+    function CorrerTruco(idMesa) {
+        jovoTruco.server.correrTruco(idMesa);
+    }
+
+    function CorrerMaoDeOnze(idMesa) {
+        jovoTruco.server.correrMaoDeOnze(idMesa);
+    }
+    function AceiatrMaoDeOnze(idMesa) {
+        jovoTruco.server.aceiatrMaoDeOnze(idMesa);
+    }
+    function MaoDeOnzeResult(result) {
+        $('#divModalTrucado').hide();
+        $('#divModalTrucar').hide();
+        $('.contModalTrucar div:nth-child(3)').css('display', 'block');
+        $('.contModalTrucar div:nth-child(4)').css('display', 'block');
+        $('.contModalTrucar div:nth-child(5)').css('display', 'none');
+        $('#btnTrcTempo').attr('tipo', 'truco');
+        if (result == "true")
+            $('#divModalResultTruco').hide();
+    }
+
+    function TimeAceitaTruco() {
+        $('#divModalResultTruco').hide();
+    }
+    function TimeCorreTruco() {
+        $('#divModalResultTruco').hide();
+        jovoTruco.server.proximaRodadaCartas($('#hdnIdMesa').val());
+    }
+
+    function abandoJogoAdversarios() {
+        $.get("../NovoTruco/CarregaJogo", { pagina: $('#hdnPaginaSala').val() }).success(function (data) {
+            $('#divJogo').html(data);
+            /*----*/
+            $('#divPagJogo').html('');
+            $('#divPagJogo').hide();
+            $('#dicPagPrincipal').show();
+            $('#divModalResultTruco').hide();
+        });
+    }
+
+</script>
+
+<script id="scrTentos">
+    
+    function inserirTentos(qnt1, qnt2, qnt3, qnt4) {
+        var numJg = parseInt($('#hdnNumJogador').val());
+
+        var pontoPrin = $('#divPontosPrin .Tentos').length;
+        var pontoAdver = $('#divPontosAdver .Tentos').length;
+        var pontoTPrin = $('#divPontosPrin .TentosRodada').length;
+        var pontoTAdver = $('#divPontosAdver .TentosRodada').length;
+
+        var qntPntPrin = numJg == 1 || numJg == 3 ? parseInt(qnt1) - pontoPrin : parseInt(qnt2) - pontoPrin;
+        var qntPntAdver = numJg == 1 || numJg == 3 ? parseInt(qnt2) - pontoAdver : parseInt(qnt1) - pontoAdver;
+        var qntPntTPrin = numJg == 1 || numJg == 3 ? parseInt(qnt3) - pontoTPrin : parseInt(qnt4) - pontoTPrin;
+        var qntPntTAdver = numJg == 1 || numJg == 3 ? parseInt(qnt4) - pontoTAdver : parseInt(qnt3) - pontoTAdver;
+
+        for (var i = 0; i < qntPntPrin ; i++) {
+            $('#divPontosPrin').append('<div class="Tentos"></div>');
+        }
+        for (var l = 0; l < qntPntTPrin ; l++) {
+            $('#divPontosPrin').append('<div class="TentosRodada"></div>');
+        }
+        for (var j = 0; j < qntPntAdver ; j++) {
+            $('#divPontosAdver').append('<div class="Tentos"></div>');
+        }
+        for (var n = 0; n < qntPntTAdver ; n++) {
+            $('#divPontosAdver').append('<div class="TentosRodada"></div>');
+        }
+        for (var j = 0; j < qntPntPrin + qntPntAdver ; j++) {
+            $('.dvTentosMesa div[class~="Tentos"]:nth-child(1)').animate({
+                    opacity: 0.25,
+                    height: "toggle"
+                }, 4000, function () {
+                    $(this).remove();
+                });
+        }
+        for (var n = 0; n < qntPntTPrin + qntPntTAdver ; n++) {
+            $('.dvTentosMesa div[class~="TentosRodada"]:nth-child(1)').animate({
+                    opacity: 0.25,
+                    height: "toggle"
+                }, 5000, function () {
+                    $(this).remove();
+                });
+        }
+        organizaTentos('#divPontosPrin', 150, 150);
+        organizaTentos('#divPontosAdver', 150, 150);
+        //organizaTentos('.dvTentosMesa', 150, 150);
+    }
+    function organizaTentos(parameters, esquer, direi) {
+        $(parameters + ' .Tentos').each(function () {
+            var esq = Math.floor((Math.random() * esquer) + 1);
+            var cima = Math.floor((Math.random() * direi) + 1);
+            var rot = Math.floor((Math.random() * 360) + 1);
+            $(this).css('margin-left', esq);
+            $(this).css('margin-top', cima);
+            $(this).css('-webkit-transform', 'rotate(' + rot + 'deg)');
+        });
+        $(parameters + ' .TentosRodada').each(function () {
+            var esq = Math.floor((Math.random() * esquer) + 1);
+            var cima = Math.floor((Math.random() * direi) + 1);
+            var rot = Math.floor((Math.random() * 360) + 1);
+            $(this).css('margin-left', esq);
+            $(this).css('margin-top', cima);
+            $(this).css('-webkit-transform', 'rotate(' + rot + 'deg)');
+        });
+    }
+
+</script>
+
+<script id="srcChatIndividual">
+
+    jovoTruco.client.transmitirMensagemDest = function (remetenteId, remetenteNome, conteudo) {
+        var procDiv = $("#div" + remetenteId).length;
+        console.log(procDiv);
+        var divCont = "#msg" + remetenteId;
+        //var remCont = conteudo.split('[{;}]').length <= 1 ? '<div><b>' + remetenteNome + ':</b> ' + conteudo + '</div>' : conteudo;
+        if (procDiv > 0) {
+            $(divCont).append(conteudo);
+            $(divCont).animate({ scrollTop: $(divCont)[0].scrollHeight }, 500);
+        } else {
+            CriarChat(remetenteNome, remetenteId, conteudo);
+        }
+    };
+    jovoTruco.client.transmitirMensagemReme = function (destinatarioId, destinatarioNome, conteudo) {
+        var divCont = "#msg" + destinatarioId;
+        $(divCont).append(conteudo);
+        $(divCont).animate({ scrollTop: $(divCont)[0].scrollHeight }, 500);
+    };
+    jovoTruco.client.usuarioDisconect = function (destinatarioId) {
+        var divCont = "#msg" + destinatarioId;
+        $(divCont).append('<div><b style="color:gray;"> offline...</div>');
+        $(divCont).animate({ scrollTop: $(divCont)[0].scrollHeight }, 500);
+    };
+
+    jovoTruco.client.digitandoRec = function (remetenteId, onOff) {
+        var procDiv = $("#div" + remetenteId).length;
+        if (procDiv > 0) {
+            var divCont = "#msg" + remetenteId;
+            var remCont = '<div id="agd' + remetenteId + '" class="divDigitando" style="padding-left: 13px; width: 207px; bottom: 34px; background-color: rgb(222, 222, 222); position: fixed;"><b style="color: gray">Digitando...</b></div>';
+            if (onOff == "true") {
+                $(divCont).append(remCont);
+                $(divCont).animate({ scrollTop: $(divCont)[0].scrollHeight }, 500);
+            } else {
+                $("#agd" + remetenteId).remove();
+                $(divCont).animate({ scrollTop: $(divCont)[0].scrollHeight }, 500);
+            }
+        }
+    };
+
+    function FecharChat(idBtn) {
+        var a = $(idBtn).attr('idUsuario');
+        $(idBtn).parent().parent().remove();
+        $('#divListaJogadores > ul li[valor~="' + a + '"]').attr('ativo', "false");
+        jovoTruco.server.fecharChat(a);
+    }
+    function EsconderExibirChat(idBtn) {
+        var a = $(idBtn).attr('valor');
+        if (a == "_") {
+            $(idBtn).parent().next().css('display', 'none');
+            $(idBtn).parent().next().next().css('display', 'none');
+            $(idBtn).attr('valor', 'O');
+        } else {
+            $(idBtn).parent().next().css('display', 'block');
+            $(idBtn).parent().next().next().css('display', 'block');
+            $(idBtn).attr('valor', '_');
+        }
+    }
+    function CriarChat(none, connectId, conteudo) {
+        var a =
+            '    <div id="cht' + connectId + '" class="divChat"  draggable="true" ondragstart="drag(event)">' +
+                '   <div id="div' + connectId + '" class="divChatBtn">' +
+                '      <label>' + none + '</label>' +
+                '      <div valor="_" onclick="EsconderExibirChat(this);"></div>' +
+                '      <div idUsuario="' + connectId + '" onclick="FecharChat(this);"></div>' +
+                '   </div>' +
+                '   <div id="msg' + connectId + '" class="divMenssagem">' + conteudo + '</div>' +
+                '   <input evento="0" connectId="' + connectId + '" onkeyup="RemetenteDigitando(this)" onkeydown="myFunction(this);" type="text" style="width: 214px; margin-left: 2px;margin-top: 2px;font-size: 22px;" />' +
+                '</div>';
+
+        $('#divsChats').append(a);
+
+        var dad1 = $('.divChat').length;
+        if (dad1 > 1) {
+            var divEsta = $('#div' + connectId).parent();
+
+            var offset2 = $(divEsta).offset();
+            var lfTHis = offset2.left;
+            var guardaUltima = 0;
+
+            $('.divChat').each(function () {
+                var divAntes = $(this);
+
+                var idEsta = $(divEsta).attr('id');
+                var idAntes = $(divAntes).attr('id');
+
+                if (idEsta != idAntes) {
+                    if ($(divAntes).css('bottom') == "0px") {
+                        var offset = divAntes.offset();
+
+                        if (offset.left == lfTHis) {
+                            if (guardaUltima != 0) {
+                                lfTHis = guardaUltima - 218;
+                                guardaUltima = lfTHis;
+                            } else {
+                                lfTHis = offset.left - 218;
+                            }
+                        }
+                        else if (offset.left < lfTHis) {
+                            guardaUltima = offset.left;
+                        }
+                    }
+                }
+
+            });
+            $(divEsta).css('left', lfTHis);
+        }
+        $(function () {
+            $('.divChat > input[connectId~="' + connectId + '"]').focus();
+        });
+    }
+    function myFunction(idChtMsg) {
+        if ($(idChtMsg).attr('evento') == "0") {
+            $(idChtMsg).on('keypress', function (e) {
+                if (e.which == 13) {
+                    if ($(idChtMsg).val().trim() != '') {
+                        var connectId = $(idChtMsg).attr('connectId');
+                        var conteudo = $(idChtMsg).val();
+                        jovoTruco.server.enviarMensagem(connectId, conteudo);
+                        $(idChtMsg).val('');
+                    }
+                }
+            });
+            $(idChtMsg).attr('evento', '2');
+            $(idChtMsg).removeAttr('onkeydown');
+        }
+    }
+
+    var cont = 0;
+    function RemetenteDigitando(txtInput) {
+        var con = $(txtInput).attr('connectId');
+        if ($(txtInput).val().trim() != '' && cont == 0) {
+            jovoTruco.server.digitando(con, "true");
+            cont = 1;
+        } else if ($(txtInput).val().trim() == '') {
+            jovoTruco.server.digitando(con, "false");
+            cont = 0;
+        }
+    }
+</script>
+
+<script id="srcChatGeral">
+
+    jovoTruco.client.transmiteMessageGeral = function (conteudo) {
+        $("#txtChatEsperaDialog").append(conteudo);
+        $("#txtChatEsperaDialog").animate({ scrollTop: $('#txtChatEsperaDialog')[0].scrollHeight }, 500);
+        $('#txtChatEspera').val('');
+    };
+
+    function EnviaMenssagemGeral() {
+        jovoTruco.server.enviarMenssagemGeral($('#txtChatEspera').val());
+    }
+</script>
+
+<script id="srcChatMesa">
+
+
+    </script>
+
+<script id="srcVarios">
+
+    jovoTruco.client.preenchePainel = function (pnUltimoMao, pnJogadorVez, pnVenceRodada) {
+        console.log(pnUltimoMao + "," + pnJogadorVez + "," + pnVenceRodada);
+        $('#pnUltimoMao').text($('#pnUltimoMao').text() + "," + pnUltimoMao);
+        $('#pnJogadorVez').text($('#pnJogadorVez').text() + "," + pnJogadorVez);
+        $('#pnVenceRodada').text($('#pnVenceRodada').text() + "," + pnVenceRodada);
+    };
+
+    $('#txtChatEspera').keypress(function (e) {
+        if ($('#txtChatEspera').val().trim() != '' && e.which == 13) {
+            EnviaMenssagemGeral();
+        }
+    });
+
+    function startCountdown() {
+        // Se o tempo não for zerado
+        if ((tempo - 1) >= 0) {
+            var min = parseInt(tempo / 60);
+            var seg = tempo % 60;
+            if (min < 10) {
+                min = "0" + min;
+                min = min.substr(0, 2);
+            }
+            if (seg <= 9) {
+                seg = "0" + seg;
+            }
+            var horaImprimivel = '00:' + seg;
+            $("#btnTrcTempo").val(horaImprimivel);
+            if (tempo > 0)
+                setTimeout('startCountdown()', 1000);
+            tempo--;
+        } else {
+            if (tempo == 0 && $("#btnTrcTempo").attr('tipo') == 'truco')
+                CorrerTruco($('#hdnIdMesa').val());
+            else if (tempo == 0 && $("#btnTrcTempo").attr('tipo') == 'm11')
+                CorrerMaoDeOnze($('#hdnIdMesa').val());
+        }
+    }
+    
+</script>
